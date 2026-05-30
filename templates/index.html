@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rambati Rice Mill – Fresh Grain Products, Nepal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2d5a27;
+    --green-light: #3d7a35;
+    --green-pale: #f0f7ee;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-pale: #fdf8ee;
+    --cream: #faf8f3;
+    --dark: #1a2317;
+    --text: #3a3a2e;
+    --text-muted: #7a7a6a;
+    --white: #ffffff;
+    --shadow: 0 4px 32px rgba(45,90,39,0.10);
+    --shadow-gold: 0 4px 24px rgba(201,168,76,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,248,243,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    box-shadow: 0 2px 20px rgba(45,90,39,0.07);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--green), var(--green-light));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 10px rgba(45,90,39,0.25);
+  }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--text);
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green);
+    color: var(--white) !important;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 600 !important;
+    transition: background 0.2s, transform 0.15s !important;
+    box-shadow: 0 2px 10px rgba(45,90,39,0.2);
+  }
+  .nav-cta:hover { background: var(--green-light) !important; transform: translateY(-1px); }
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+  }
+  .hamburger span { width: 24px; height: 2px; background: var(--green); border-radius: 2px; display: block; transition: 0.3s; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 68px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(150deg, #1a2e17 0%, #2d5a27 45%, #3d7a35 100%);
+  }
+  .hero-grain {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+  .hero-circles {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-circles::before {
+    content: '';
+    position: absolute; right: -8vw; top: 50%; transform: translateY(-50%);
+    width: 55vw; height: 55vw; max-width: 680px; max-height: 680px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+  }
+  .hero-circles::after {
+    content: '';
+    position: absolute; left: -5vw; bottom: -10%;
+    width: 35vw; height: 35vw; max-width: 400px; max-height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto;
+    padding: 60px 5vw;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.18);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    padding: 6px 16px; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 22px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-badge::before { content: '✦'; font-size: 0.7rem; }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 900; color: var(--white);
+    line-height: 1.1; margin-bottom: 20px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+  .hero-subtitle {
+    color: rgba(255,255,255,0.72);
+    font-size: 1.05rem; line-height: 1.7;
+    margin-bottom: 36px;
+    animation: fadeUp 0.7s 0.2s ease both;
+    font-weight: 300;
+  }
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .btn-wa {
+    background: #25D366; color: var(--white);
+    padding: 14px 28px; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 18px rgba(37,211,102,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.4); }
+  .btn-call {
+    background: transparent; color: var(--white);
+    padding: 14px 28px; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 2px solid rgba(255,255,255,0.4);
+    transition: all 0.2s;
+  }
+  .btn-call:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.7); }
+  .hero-trust {
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 10px;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .hero-trust-badge {
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--gold-light);
+    padding: 6px 14px; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    animation: fadeUp 0.7s 0.25s ease both;
+  }
+  .hero-card-stack {
+    position: relative; width: 100%; max-width: 380px;
+  }
+  .hero-main-card {
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 24px;
+    padding: 32px 32px 50px 32px;
+    text-align: center;
+  }
+  .hero-icon-big { font-size: 5rem; line-height: 1; margin-bottom: 16px; display: block; }
+  .hero-card-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--white); font-size: 1.3rem; font-weight: 700; margin-bottom: 8px;
+  }
+  .hero-card-sub { color: rgba(255,255,255,0.65); font-size: 0.88rem; }
+  .float-stat {
+    position: absolute;
+    background: var(--white);
+    border-radius: 16px; padding: 12px 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap; z-index: 10;
+  }
+  .float-stat.s1 { top: -18px; left: -10px; }
+  .float-stat.s2 { bottom: -15px; right: -10px; }
+  .float-stat-icon { font-size: 1.6rem; }
+  .float-stat-num { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--green); line-height: 1; }
+  .float-stat-label { font-size: 0.72rem; color: var(--text-muted); }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 90px 5vw; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .section-label::before, .section-label::after { content: '─'; opacity: 0.5; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800; color: var(--dark);
+    line-height: 1.2;
+  }
+  .section-title span { color: var(--green); }
+  .section-title em { color: var(--gold); font-style: italic; }
+  .section-sub {
+    color: var(--text-muted); font-size: 1rem; line-height: 1.75;
+    max-width: 600px; margin-top: 14px;
+  }
+  .max-w { max-width: 1200px; margin: 0 auto; }
+
+  /* ── ABOUT ── */
+  #about { background: var(--white); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-img-box {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--green-pale) 0%, #d4edce 100%);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(45,90,39,0.1);
+  }
+  .about-big-icon { font-size: 7rem; }
+  .about-accent-box {
+    position: absolute; bottom: -20px; right: -20px;
+    background: var(--green);
+    color: var(--white);
+    padding: 20px 24px; border-radius: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .about-accent-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 800; line-height: 1;
+    color: var(--gold-light);
+  }
+  .about-accent-label { font-size: 0.78rem; opacity: 0.85; margin-top: 4px; }
+  .about-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .pill {
+    background: var(--green-pale);
+    color: var(--green);
+    border: 1px solid rgba(45,90,39,0.15);
+    padding: 7px 16px; border-radius: 50px;
+    font-size: 0.83rem; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ── SERVICES ── */
+  #services { background: var(--cream); }
+  .services-header { text-align: center; margin-bottom: 56px; }
+  .services-header .section-sub { margin: 14px auto 0; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;
+  }
+  .svc-card {
+    background: var(--white);
+    border-radius: 20px; padding: 32px 28px;
+    border: 1px solid rgba(45,90,39,0.08);
+    box-shadow: var(--shadow);
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .svc-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .svc-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(45,90,39,0.14); }
+  .svc-card:hover::after { opacity: 1; }
+  .svc-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--green-pale), #d4edce);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin-bottom: 20px;
+    border: 1px solid rgba(45,90,39,0.1);
+  }
+  .svc-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.18rem; font-weight: 700; color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .svc-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--white); }
+  .products-header { margin-bottom: 48px; }
+  .products-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px;
+  }
+  .prod-card {
+    border-radius: 20px; overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.15);
+    box-shadow: var(--shadow-gold);
+    transition: transform 0.25s;
+    background: var(--gold-pale);
+  }
+  .prod-card:hover { transform: translateY(-5px); }
+  .prod-img {
+    height: 160px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    background: linear-gradient(135deg, #fdf5e0 0%, #f9edca 100%);
+    position: relative; overflow: hidden;
+  }
+  .prod-img::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(201,168,76,0.1));
+  }
+  .prod-info { padding: 20px 22px; }
+  .prod-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 6px;
+  }
+  .prod-info p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px; }
+  .prod-badge {
+    display: inline-block;
+    background: var(--green);
+    color: var(--white);
+    padding: 4px 12px; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 600;
+  }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials {
+    background: linear-gradient(135deg, #1a2e17 0%, #2d5a27 100%);
+    position: relative; overflow: hidden;
+  }
+  #testimonials::before {
+    content: '"';
+    position: absolute; top: -20px; left: 3vw;
+    font-family: 'Playfair Display', serif;
+    font-size: 18rem; color: rgba(255,255,255,0.04);
+    line-height: 1; pointer-events: none;
+  }
+  #testimonials .section-title { color: var(--white); }
+  #testimonials .section-label { color: var(--gold-light); }
+  #testimonials .section-sub { color: rgba(255,255,255,0.6); }
+  .testi-header { text-align: center; margin-bottom: 52px; }
+  .testi-header .section-sub { margin: 14px auto 0; }
+  .testi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px;
+  }
+  .testi-card {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 28px;
+    transition: transform 0.2s;
+  }
+  .testi-card:hover { transform: translateY(-4px); }
+  .testi-stars { color: var(--gold-light); font-size: 0.95rem; margin-bottom: 14px; letter-spacing: 2px; }
+  .testi-text {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.95rem; line-height: 1.7; font-style: italic; margin-bottom: 20px;
+  }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .testi-name { color: var(--white); font-weight: 600; font-size: 0.9rem; }
+  .testi-role { color: rgba(255,255,255,0.5); font-size: 0.78rem; }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--cream); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+  }
+  .contact-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--dark); margin-bottom: 24px;
+  }
+  .contact-item {
+    display: flex; gap: 16px; align-items: flex-start; margin-bottom: 22px;
+  }
+  .contact-item-icon {
+    width: 46px; height: 46px; flex-shrink: 0;
+    background: var(--green-pale);
+    border: 1px solid rgba(45,90,39,0.15);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+  }
+  .contact-item-text strong { color: var(--dark); font-weight: 600; display: block; margin-bottom: 3px; }
+  .contact-item-text span { color: var(--text-muted); font-size: 0.9rem; }
+  .contact-btns { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+  .cta-wa {
+    background: #25D366; color: var(--white);
+    padding: 15px 28px; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cta-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.4); }
+  .cta-call {
+    background: var(--green); color: var(--white);
+    padding: 15px 28px; border-radius: 50px;
+    text-decoration: none; font-weight: 700; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .cta-call:hover { background: var(--green-light); transform: translateY(-2px); }
+  .contact-form {
+    background: var(--white);
+    border-radius: 24px; padding: 36px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(45,90,39,0.08);
+  }
+  .contact-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; color: var(--dark); margin-bottom: 24px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block; font-size: 0.82rem; font-weight: 600;
+    color: var(--text-muted); margin-bottom: 7px; letter-spacing: 0.04em;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 13px 16px;
+    border: 1.5px solid rgba(45,90,39,0.15);
+    border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.93rem; color: var(--dark);
+    background: var(--cream); outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--green);
+  }
+  .form-group textarea { height: 110px; resize: vertical; }
+  .form-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--green), var(--green-light));
+    color: var(--white); border: none;
+    padding: 15px; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(45,90,39,0.3);
+  }
+  .form-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,90,39,0.35); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 48px 5vw 28px;
+    color: rgba(255,255,255,0.6);
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 24px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 700; color: var(--white); margin-bottom: 12px;
+  }
+  .footer-logo span { color: var(--gold-light); }
+  .footer-desc { font-size: 0.88rem; line-height: 1.7; max-width: 300px; }
+  .footer-col h4 {
+    color: var(--white); font-size: 0.9rem; font-weight: 700;
+    margin-bottom: 16px; letter-spacing: 0.05em;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+  .footer-col ul a:hover { color: var(--gold-light); }
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem;
+  }
+  .footer-bottom a { color: var(--gold-light); text-decoration: none; }
+
+  /* ── STICKY BUTTONS ── */
+  .sticky-wa {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: #25D366; color: var(--white);
+    width: 58px; height: 58px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.45);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: pulse 2.5s infinite;
+  }
+  .sticky-wa:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.55); animation: none; }
+  .sticky-call {
+    position: fixed; bottom: 94px; right: 24px; z-index: 999;
+    background: var(--green); color: var(--white);
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 16px rgba(45,90,39,0.4);
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .sticky-call:hover { transform: scale(1.1); }
+
+  /* ── USER NAV ── */
+  .nav-user {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-user-name {
+    font-size: 0.85rem; font-weight: 600; color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--green-light));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.85rem; font-weight: 700;
+  }
+  .nav-logout {
+    font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
+    padding: 6px 12px; border-radius: 50px;
+    border: 1px solid rgba(45,90,39,0.18);
+    transition: all 0.2s;
+  }
+  .nav-logout:hover { color: var(--green); border-color: var(--green); }
+
+  /* ── ORDER MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(26,35,23,0.65);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open {
+    opacity: 1; pointer-events: auto;
+  }
+  .modal-box {
+    background: var(--white);
+    border-radius: 28px;
+    padding: 40px 36px;
+    width: 100%; max-width: 520px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+    position: relative;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-overlay.open .modal-box {
+    transform: translateY(0) scale(1);
+  }
+  .modal-close {
+    position: absolute; top: 18px; right: 20px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--cream); border: none; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    color: var(--text-muted);
+  }
+  .modal-close:hover { background: rgba(45,90,39,0.1); color: var(--green); }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 800; color: var(--dark);
+    margin-bottom: 6px;
+  }
+  .modal-title em { color: var(--green); font-style: italic; }
+  .modal-sub {
+    color: var(--text-muted); font-size: 0.88rem;
+    margin-bottom: 28px; line-height: 1.6;
+  }
+  .modal-field { margin-bottom: 18px; }
+  .modal-field label {
+    display: block; font-size: 0.73rem; font-weight: 700;
+    color: var(--text-muted); letter-spacing: 0.07em;
+    text-transform: uppercase; margin-bottom: 7px;
+  }
+  .modal-input, .modal-select, .modal-textarea {
+    width: 100%; padding: 13px 16px;
+    border: 1.5px solid rgba(45,90,39,0.15);
+    border-radius: 12px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem; color: var(--dark);
+    background: var(--cream); outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .modal-input:focus, .modal-select:focus, .modal-textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(45,90,39,0.08);
+    background: #fff;
+  }
+  .modal-textarea { height: 90px; resize: vertical; }
+  .modal-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .order-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--green), var(--green-light));
+    color: var(--white); border: none;
+    padding: 15px; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(45,90,39,0.3);
+    position: relative; overflow: hidden;
+    margin-top: 6px;
+  }
+  .order-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,90,39,0.38); }
+  .order-submit.loading { pointer-events: none; opacity: 0.8; }
+  .order-success {
+    display: none; text-align: center; padding: 20px 0;
+  }
+  .order-success-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #e8f8ed, #d4edce);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem; margin: 0 auto 16px;
+    border: 2px solid rgba(39,174,96,0.22);
+  }
+  .order-success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem; font-weight: 800; color: var(--dark); margin-bottom: 8px;
+  }
+  .order-success-sub { color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 20px; }
+  .btn-order-again {
+    background: var(--green); color: var(--white);
+    border: none; padding: 12px 28px; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.93rem;
+    font-weight: 700; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-order-again:hover { background: var(--green-light); }
+
+  /* ── TOAST ── */
+  .idx-toast {
+    position: fixed; bottom: 26px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark); color: #fff;
+    padding: 12px 24px; border-radius: 50px;
+    font-size: .85rem; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    z-index: 9999; white-space: nowrap;
+  }
+  .idx-toast.show { transform: translateX(-50%) translateY(0); }
+  .idx-toast.error { background: #c0392b; }
+  .idx-toast.success { background: #27ae60; }
+
+  /* ── DIVIDER ── */
+  .gold-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0;
+    opacity: 0.4;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.45); }
+    50% { box-shadow: 0 4px 36px rgba(37,211,102,0.7); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-btns { justify-content: center; }
+    .hero-trust { justify-content: center; }
+    .hero-visual { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column; gap: 0;
+      position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+      background: rgba(250,248,243,0.98);
+      align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    section { padding: 64px 5vw; }
+    .float-stat { display: none; }
+    .modal-field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    Rambati <span>Rice Mill</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#products">Products</a></li>
+    {% if user %}
+      {% if user.role == 'owner' %}
+        <li><a href="/owner">📊 Dashboard</a></li>
+      {% endif %}
+      <li>
+        <a href="/dashboard" style="text-decoration: none;">
+          <div class="nav-user">
+            <div class="nav-user-avatar">{{ user.name[0].upper() }}</div>
+            <span class="nav-user-name">{{ user.name.split()[0] }}</span>
+          </div>
+        </a>
+      </li>
+      <li><a href="/logout" class="nav-logout">Sign Out</a></li>
+    {% else %}
+      <li><a href="/login">Login / Sign Up</a></li>
+    {% endif %}
+    <li><a href="#" class="nav-cta" id="orderNowBtn" onclick="handleOrderNow(event)">🛒 Order Now</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-circles"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">Nepal's Trusted Grain Mill</div>
+      <h1 class="hero-title">Fresh Rice & Flour <em>Delivered</em> to Your Home</h1>
+      <p class="hero-subtitle">Rambati Rice Mill – Premium quality grain products sourced and milled fresh in Nepal. Pure, hygienic, and delivered right to your doorstep.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-wa" id="heroOrderBtn" onclick="handleOrderNow(event)">
+          <span>🛒</span> Order Now
+        </a>
+        <a href="tel:+9779800000000" class="btn-call">
+          <span>📞</span> Call Now
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-badge">⚡ Same Day Delivery Available</div>
+        <div class="hero-trust-badge">✅ Cash on Delivery</div>
+        <div class="hero-trust-badge">🚚 Home Delivery</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="hero-main-card">
+          <span class="hero-icon-big">🌾</span>
+          <div class="hero-card-title">Farm Fresh Quality</div>
+          <div class="hero-card-sub">Direct from mill to your kitchen</div>
+        </div>
+        <div class="float-stat s1">
+          <span class="float-stat-icon">🏅</span>
+          <div>
+            <div class="float-stat-num">500+</div>
+            <div class="float-stat-label">Happy Customers</div>
+          </div>
+        </div>
+        <div class="float-stat s2">
+          <span class="float-stat-icon">⚡</span>
+          <div>
+            <div class="float-stat-num">Same Day</div>
+            <div class="float-stat-label">Delivery Available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="max-w">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-img-box">
+          <span class="about-big-icon">🌾</span>
+        </div>
+        <div class="about-accent-box">
+          <div class="about-accent-num">10+</div>
+          <div class="about-accent-label">Years of Trust</div>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="section-label">About Us</div>
+        <h2 class="section-title">Quality You Can <em>Trust</em>, <span>Freshness</span> You Can Taste</h2>
+        <p class="section-sub" style="max-width:100%">Rambati Rice Mill has been serving Nepali households and local businesses for over a decade. We take pride in delivering the freshest, purest grain products — milled with care and packed with hygiene. From premium basmati rice to freshly ground wheat flour, every product is a promise of quality.</p>
+        <p class="section-sub" style="max-width:100%;margin-top:12px;">As a local Nepal business, we deeply understand our community's needs. That's why we offer home delivery, bulk orders for shops, and the convenience of cash on delivery — making quality grain accessible to every household.</p>
+        <div class="about-pills">
+          <span class="pill">✅ Hygienic Processing</span>
+          <span class="pill">🌿 100% Natural</span>
+          <span class="pill">🏠 Home Delivery</span>
+          <span class="pill">💰 Best Prices</span>
+          <span class="pill">🇳🇵 Nepal Based</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="max-w">
+    <div class="services-header">
+      <div class="section-label">Our Services</div>
+      <h2 class="section-title">Everything You Need, <em>Delivered</em></h2>
+      <p class="section-sub">From single household orders to bulk wholesale supply, we've got you covered.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">🌾</div>
+        <h3>Rice Supply</h3>
+        <p>Wholesale and retail rice supply including basmati, local Nepali varieties, and fine grain rice. Fresh and carefully sorted every batch.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🌿</div>
+        <h3>Fresh Wheat Flour</h3>
+        <p>Freshly ground wheat flour (aata) made from premium quality wheat. Pure and free from additives — perfect for your daily cooking needs.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🚚</div>
+        <h3>Home Delivery</h3>
+        <p>Order from the comfort of your home via WhatsApp or phone call. We deliver right to your door quickly and reliably.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">💵</div>
+        <h3>Cash on Delivery</h3>
+        <p>No advance payment required. Pay when your order arrives at your doorstep. Simple, safe, and convenient for every customer.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📦</div>
+        <h3>Bulk Orders</h3>
+        <p>Special pricing and packaging available for shops, restaurants, and households needing large quantities. Contact us for bulk rates.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">✨</div>
+        <h3>Grain Products</h3>
+        <p>Beyond rice and flour, we offer a range of related grain products including lentils, beaten rice (chiura), and seasonal grains.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="max-w">
+    <div class="products-header">
+      <div class="section-label">Our Products</div>
+      <h2 class="section-title">Premium <span>Grain</span> Products</h2>
+      <p class="section-sub">Carefully selected and freshly processed for your family's health and taste.</p>
+    </div>
+    <div class="products-grid">
+      <div class="prod-card">
+        <div class="prod-img">🍚</div>
+        <div class="prod-info">
+          <h3>Premium Basmati Rice</h3>
+          <p>Long-grain aromatic basmati rice, perfect for special occasions and daily meals.</p>
+          <span class="prod-badge">Most Popular</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">🌾</div>
+        <div class="prod-info">
+          <h3>Local Nepali Rice</h3>
+          <p>Traditional Nepali varieties — mota chamal and fine grain for your everyday dal-bhat.</p>
+          <span class="prod-badge">Best Value</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">💛</div>
+        <div class="prod-info">
+          <h3>Fresh Wheat Flour (Aata)</h3>
+          <p>Freshly ground whole wheat flour — pure, healthy, and perfect for roti and bread.</p>
+          <span class="prod-badge">Farm Fresh</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">🫘</div>
+        <div class="prod-info">
+          <h3>Lentils & Dal</h3>
+          <p>Quality lentils and dal varieties — yellow, black, and red lentils for your kitchen.</p>
+          <span class="prod-badge">Available</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">🌽</div>
+        <div class="prod-info">
+          <h3>Beaten Rice (Chiura)</h3>
+          <p>Traditional Nepali chiura — ideal for snacks, festivals, and everyday breakfasts.</p>
+          <span class="prod-badge">Seasonal</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">📦</div>
+        <div class="prod-info">
+          <h3>Bulk Packages</h3>
+          <p>5kg, 10kg, 25kg, and 50kg bags available for rice, flour, and other grain products.</p>
+          <span class="prod-badge">Wholesale</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="max-w">
+    <div class="testi-header">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-title">What Our Customers Say</h2>
+      <p class="section-sub">Hundreds of happy families and businesses trust Rambati Rice Mill every day.</p>
+    </div>
+    <div class="testi-grid">
+      {% if feedbacks %}
+        {% for fb in feedbacks %}
+        <div class="testi-card">
+          <div class="testi-stars">{{ '★' * fb.rating }}{{ '☆' * (5 - fb.rating) }}</div>
+          <p class="testi-text">"{{ fb.comment }}"</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{ fb.customer_name[0].upper() }}</div>
+            <div>
+              <div class="testi-name">{{ fb.customer_name }}</div>
+              <div class="testi-role">{{ fb.role_label }}</div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <!-- Defaults if empty -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Very fresh rice and fast delivery service! I ordered in the morning and received it before lunch. The quality is excellent — our whole family loves it."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">👩</div>
+            <div>
+              <div class="testi-name">Sita Devi Shrestha</div>
+              <div class="testi-role">Household Customer, Kathmandu</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Trusted mill in our area. We've been ordering wheat flour and rice for our shop from Rambati for 3 years now. Always consistent quality and fair pricing."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">👨</div>
+            <div>
+              <div class="testi-name">Ram Bahadur Tamang</div>
+              <div class="testi-role">Shop Owner, Bhaktapur</div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    
+    <div style="text-align:center; margin-top: 40px;">
+      {% if user %}
+        <button onclick="openFeedbackModal()" style="background:var(--green);color:white;border:none;padding:14px 32px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(45,90,39,0.25);transition:transform 0.2s;">💬 Leave Feedback</button>
+      {% else %}
+        <a href="/login?next=feedback" style="display:inline-block;background:var(--green);color:white;text-decoration:none;padding:14px 32px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;box-shadow:0 8px 24px rgba(45,90,39,0.25);transition:transform 0.2s;">Login to Leave Feedback</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="max-w">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-label">Contact Us</div>
+        <h2 class="section-title">Order Now or <em>Get in Touch</em></h2>
+        <p class="section-sub" style="max-width:100%;margin-bottom:28px;">The easiest way to order is via WhatsApp. Just message us with your requirements and address, and we'll handle the rest!</p>
+
+        <div class="contact-item">
+          <div class="contact-item-icon">💬</div>
+          <div class="contact-item-text">
+            <strong>WhatsApp (Primary)</strong>
+            <span>Chat us anytime — fastest response guaranteed</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Phone: +977 {{phone}}</strong>
+            <span>Call us 7am – 7pm, 7 days a week</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Location: {{location}}</strong>
+            <span>Local delivery to {{delivery_location}} & surrounding areas</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🚚</div>
+          <div class="contact-item-text">
+            <strong>Cash on Delivery</strong>
+            <span>Pay when your order arrives — no advance required</span>
+          </div>
+        </div>
+
+        <div class="contact-btns">
+          <a href="https://wa.me/{{phone}}" class="cta-wa" target="_blank">
+            💬 Chat on WhatsApp
+          </a>
+          <a href="tel:{{phone}}" class="cta-call">
+            📞 Call Now
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h3>Send us a Message</h3>
+        <div class="form-group">
+          <label>YOUR NAME</label>
+          <input type="text" placeholder="e.g. Ram Sharma" required>
+        </div>
+        <div class="form-group">
+          <label>PHONE NUMBER</label>
+          <input type="tel" placeholder="e.g. 98XXXXXXXX" required>
+        </div>
+        <div class="form-group">
+          <label>YOUR LOCATION (COORDINATES)</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="flex:1;display:flex;gap:8px;">
+              <input type="text" id="latInput" placeholder="Latitude" style="flex:1;" required>
+              <input type="text" id="lngInput" placeholder="Longitude" style="flex:1;" required>
+            </div>
+            <button type="button" onclick="getLocation()" id="geoBtn" style="
+              background:var(--green);color:#fff;border:none;
+              padding:13px 14px;border-radius:12px;cursor:pointer;
+              font-size:1.1rem;white-space:nowrap;flex-shrink:0;
+              transition:background 0.2s,transform 0.15s;
+            " title="Auto-detect my location">📍</button>
+          </div>
+          <p id="geoStatus" style="font-size:0.78rem;margin-top:6px;min-height:18px;color:var(--text-muted);">Click 📍 to auto-detect or enter coordinates manually</p>
+        </div>
+        <div class="form-group">
+          <label>YOUR ORDER / MESSAGE</label>
+          <textarea placeholder="e.g. I need 10kg basmati rice and 5kg aata with home delivery..."></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit()">Send Message via WhatsApp 💬</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeOrderModal()">✕</button>
+
+    <!-- Order Form -->
+    <div id="orderFormSection">
+      <div class="modal-title">Place Your <em>Order</em> 🌾</div>
+      <p class="modal-sub">Select your products and we'll deliver fresh to your door.</p>
+
+      <div class="modal-field">
+        <label>Select Product(s)</label>
+        <select class="modal-select" id="orderItems">
+          <option value="">-- Choose a product --</option>
+          <option value="Premium Basmati Rice">🍚 Premium Basmati Rice</option>
+          <option value="Local Nepali Rice (Mota Chamal)">🌾 Local Nepali Rice (Mota Chamal)</option>
+          <option value="Fresh Wheat Flour (Aata)">💛 Fresh Wheat Flour (Aata)</option>
+          <option value="Lentils & Dal (Mixed)">🫘 Lentils & Dal (Mixed)</option>
+          <option value="Beaten Rice (Chiura)">🌽 Beaten Rice (Chiura)</option>
+          <option value="Mixed Bulk Order">📦 Mixed Bulk Order</option>
+        </select>
+      </div>
+
+      <div class="modal-field-row">
+        <div class="modal-field">
+          <label>Quantity</label>
+          <select class="modal-select" id="orderQuantity">
+            <option value="1kg">1 kg</option>
+            <option value="2kg">2 kg</option>
+            <option value="5kg">5 kg</option>
+            <option value="10kg" selected>10 kg</option>
+            <option value="25kg">25 kg</option>
+            <option value="50kg">50 kg</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label>Delivery Location (Coordinates)</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" class="modal-input" id="orderAddress" placeholder="Lat, Lng" required>
+            <button type="button" onclick="getOrderLocation()" id="orderGeoBtn" style="
+              background:var(--green);color:#fff;border:none;
+              padding:13px 14px;border-radius:12px;cursor:pointer;
+              font-size:1.1rem;white-space:nowrap;flex-shrink:0;
+              transition:background 0.2s,transform 0.15s;
+            " title="Auto-detect my location">📍</button>
+          </div>
+          <div id="orderGeoStatus" style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;min-height:15px;">Click 📍 to detect delivery location</div>
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label>Notes (optional)</label>
+        <textarea class="modal-textarea" id="orderNotes" placeholder="e.g. Call before delivery, prefer morning..."></textarea>
+      </div>
+
+      <div id="orderErrBox" style="display:none;background:#fff0f0;border:1px solid rgba(192,57,43,0.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;color:#c0392b"></div>
+
+      <button class="order-submit" id="orderSubmitBtn" onclick="submitOrder()">
+        <span id="orderSubmitText">✅ Place Order</span>
+      </button>
+    </div>
+
+    <!-- Order Success -->
+    <div class="order-success" id="orderSuccessSection">
+      <div class="order-success-icon">🎉</div>
+      <div class="order-success-title">Order Placed!</div>
+      <p class="order-success-sub">Your order has been received. We'll contact you shortly to confirm delivery.<br><strong id="orderIdDisplay"></strong></p>
+      <button class="btn-order-again" onclick="resetOrderModal()">Place Another Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedbackModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeFeedbackModal()">✕</button>
+
+    <div id="fbFormSection">
+      <div class="modal-title">Leave <em>Feedback</em> ⭐</div>
+      <p class="modal-sub">Tell us about your experience with Rambati Rice Mill.</p>
+
+      <div class="modal-field">
+        <label>Rating</label>
+        <select class="modal-select" id="fbRating">
+          <option value="5">★★★★★ (5/5) Excellent</option>
+          <option value="4">★★★★☆ (4/5) Very Good</option>
+          <option value="3">★★★☆☆ (3/5) Good</option>
+          <option value="2">★★☆☆☆ (2/5) Fair</option>
+          <option value="1">★☆☆☆☆ (1/5) Poor</option>
+        </select>
+      </div>
+
+      <div class="modal-field">
+        <label>Your Review</label>
+        <textarea class="modal-textarea" id="fbComment" placeholder="Write your feedback here..."></textarea>
+      </div>
+
+      <div id="fbErrBox" style="display:none;background:#fff0f0;border:1px solid rgba(192,57,43,0.25);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.82rem;color:#c0392b"></div>
+
+      <button class="order-submit" id="fbSubmitBtn" onclick="submitFeedback()">
+        <span id="fbSubmitText">✅ Submit Feedback</span>
+      </button>
+    </div>
+    
+    <div class="order-success" id="fbSuccessSection" style="display:none;">
+      <div class="order-success-icon">✨</div>
+      <div class="order-success-title">Thank You!</div>
+      <p class="order-success-sub">Your feedback has been submitted successfully and helps us serve you better.</p>
+      <button class="btn-order-again" onclick="location.reload()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Rambati <span>Rice Mill</span></div>
+      <p class="footer-desc">Fresh, pure grain products delivered to your home. Trusted by hundreds of Nepali families and businesses since over a decade. Quality you can taste, service you can rely on.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Our Products</h4>
+      <ul>
+        <li><a href="#">Basmati Rice</a></li>
+        <li><a href="#">Local Nepali Rice</a></li>
+        <li><a href="#">Wheat Flour (Aata)</a></li>
+        <li><a href="#">Lentils & Dal</a></li>
+        <li><a href="#">Beaten Rice (Chiura)</a></li>
+        <li><a href="#">Bulk Orders</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom max-w">
+    <span>© 2026 Rambati Rice Mill, Nepal. All rights reserved.</span>
+    <span>Made with ❤️ for local Nepal customers</span>
+  </div>
+</footer>
+
+<!-- STICKY BUTTONS -->
+<a href="https://wa.me/{{phone}}" class="sticky-wa" target="_blank" title="Order on WhatsApp">💬</a>
+<a href="tel:{{phone}}" class="sticky-call" title="Call Now">📞</a>
+
+<script>
+  // ── Session state from server ──
+  const IS_LOGGED_IN = {{ 'true' if user else 'false' }};
+  const USER_ROLE = '{{ user.role if user else "" }}';
+
+  function toggleMenu() {
+    const nav = document.getElementById('navLinks');
+    nav.classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+
+  // ── Order Now Flow ──
+  function handleOrderNow(e) {
+    e.preventDefault();
+    if (!IS_LOGGED_IN) {
+      window.location.href = '/login?next=order';
+      return;
+    }
+    if (USER_ROLE === 'owner') {
+      showIdxToast('Owners manage orders from the dashboard.', 'error');
+      return;
+    }
+    openOrderModal();
+  }
+
+  // ── Order Modal ──
+  function openOrderModal() {
+    document.getElementById('orderModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    resetOrderModal();
+  }
+
+  function closeOrderModal() {
+    document.getElementById('orderModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close on overlay click
+  document.getElementById('orderModal').addEventListener('click', function(e) {
+    if (e.target === this) closeOrderModal();
+  });
+
+  function resetOrderModal() {
+    document.getElementById('orderFormSection').style.display = 'block';
+    document.getElementById('orderSuccessSection').style.display = 'none';
+    document.getElementById('orderItems').value = '';
+    document.getElementById('orderAddress').value = '';
+    document.getElementById('orderNotes').value = '';
+    document.getElementById('orderErrBox').style.display = 'none';
+    document.getElementById('orderSubmitText').textContent = '✅ Place Order';
+    document.getElementById('orderSubmitBtn').classList.remove('loading');
+    document.getElementById('orderSubmitBtn').disabled = false;
+  }
+
+  async function submitOrder() {
+    const items = document.getElementById('orderItems').value.trim();
+    const quantity = document.getElementById('orderQuantity').value.trim();
+    const address = document.getElementById('orderAddress').value.trim();
+    const notes = document.getElementById('orderNotes').value.trim();
+    const errBox = document.getElementById('orderErrBox');
+
+    errBox.style.display = 'none';
+
+    if (!items) { errBox.textContent = '❌ Please select a product.'; errBox.style.display = 'block'; return; }
+    if (!address) { errBox.textContent = '❌ Please enter your delivery address.'; errBox.style.display = 'block'; return; }
+
+    const btn = document.getElementById('orderSubmitBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+    document.getElementById('orderSubmitText').textContent = '⏳ Placing order...';
+
+    try {
+      const res = await fetch('/place-order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ items, quantity, address, notes })
+      });
+      const data = await res.json();
+      btn.classList.remove('loading'); btn.disabled = false;
+
+      if (data.success) {
+        document.getElementById('orderIdDisplay').textContent = 'Order ID: #' + data.order_id;
+        document.getElementById('orderFormSection').style.display = 'none';
+        document.getElementById('orderSuccessSection').style.display = 'block';
+      } else {
+        errBox.textContent = '❌ ' + data.message;
+        errBox.style.display = 'block';
+        document.getElementById('orderSubmitText').textContent = '✅ Place Order';
+      }
+    } catch(e) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      document.getElementById('orderSubmitText').textContent = '✅ Place Order';
+      errBox.textContent = '❌ Network error. Please try again.';
+      errBox.style.display = 'block';
+    }
+  }
+
+  // ── Feedback Modal ──
+  async function openFeedbackModal() {
+    document.getElementById('feedbackModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('fbFormSection').style.display = 'block';
+    document.getElementById('fbSuccessSection').style.display = 'none';
+    document.getElementById('fbErrBox').style.display = 'none';
+    
+    // Check if user already has feedback
+    try {
+      const res = await fetch('/my-feedback');
+      const data = await res.json();
+      if (data.has_feedback) {
+        document.getElementById('fbRating').value = data.rating;
+        document.getElementById('fbComment').value = data.comment;
+        document.getElementById('fbSubmitText').textContent = '🔄 Update Feedback';
+      } else {
+        document.getElementById('fbRating').value = '5';
+        document.getElementById('fbComment').value = '';
+        document.getElementById('fbSubmitText').textContent = '✅ Submit Feedback';
+      }
+    } catch(e) {
+      document.getElementById('fbRating').value = '5';
+      document.getElementById('fbComment').value = '';
+      document.getElementById('fbSubmitText').textContent = '✅ Submit Feedback';
+    }
+  }
+  function closeFeedbackModal() {
+    document.getElementById('feedbackModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('feedbackModal').addEventListener('click', function(e) {
+    if (e.target === this) closeFeedbackModal();
+  });
+
+  async function submitFeedback() {
+    const rating = document.getElementById('fbRating').value;
+    const comment = document.getElementById('fbComment').value.trim();
+    const errBox = document.getElementById('fbErrBox');
+    
+    errBox.style.display = 'none';
+    if(!comment) { errBox.textContent = '❌ Please write your review.'; errBox.style.display = 'block'; return; }
+    
+    const btn = document.getElementById('fbSubmitBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+    document.getElementById('fbSubmitText').textContent = '⏳ Submitting...';
+    
+    try {
+      const res = await fetch('/submit-feedback', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ rating, comment })
+      });
+      const data = await res.json();
+      btn.classList.remove('loading'); btn.disabled = false;
+      
+      if(data.success) {
+        document.getElementById('fbFormSection').style.display = 'none';
+        document.getElementById('fbSuccessSection').style.display = 'block';
+      } else {
+        errBox.textContent = '❌ ' + data.message;
+        errBox.style.display = 'block';
+        document.getElementById('fbSubmitText').textContent = '✅ Submit Feedback';
+      }
+    } catch(e) {
+      btn.classList.remove('loading'); btn.disabled = false;
+      document.getElementById('fbSubmitText').textContent = '✅ Submit Feedback';
+      errBox.textContent = '❌ Network error. Please try again.';
+      errBox.style.display = 'block';
+    }
+  }
+
+  function getOrderLocation() {
+    const btn = document.getElementById('orderGeoBtn');
+    const status = document.getElementById('orderGeoStatus');
+    const addressInput = document.getElementById('orderAddress');
+
+    status.style.color = 'var(--text-muted)';
+    status.innerText = '🔄 Requesting location...';
+    btn.style.background = 'var(--gold)';
+    btn.disabled = true;
+
+    if (!navigator.geolocation) {
+      status.style.color = '#c0392b';
+      status.innerText = '❌ Geolocation not supported.';
+      btn.style.background = 'var(--green)';
+      btn.disabled = false;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const lat = position.coords.latitude.toFixed(6);
+        const lon = position.coords.longitude.toFixed(6);
+        addressInput.value = lat + ', ' + lon;
+        status.style.color = 'var(--green)';
+        status.innerText = '✅ Coordinates captured successfully!';
+        btn.style.background = 'var(--green)';
+        btn.disabled = false;
+      },
+      function(error) {
+        btn.style.background = 'var(--green)';
+        btn.disabled = false;
+        status.style.color = '#c0392b';
+        if (error.code === error.PERMISSION_DENIED) {
+          status.innerText = '❌ Permission denied.';
+        } else {
+          status.innerText = '❌ Unable to get location.';
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  // ── Contact form ──
+  function getLocation() {
+    const btn = document.getElementById('geoBtn');
+    const status = document.getElementById('geoStatus');
+    const latInput = document.getElementById('latInput');
+    const lngInput = document.getElementById('lngInput');
+
+    status.style.color = 'var(--text-muted)';
+    status.innerText = '🔄 Requesting location...';
+    btn.style.background = 'var(--gold)';
+    btn.disabled = true;
+
+    if (!navigator.geolocation) {
+      status.style.color = '#c0392b';
+      status.innerText = '❌ Geolocation not supported in this browser.';
+      btn.style.background = 'var(--green)';
+      btn.disabled = false;
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        latInput.value = position.coords.latitude.toFixed(6);
+        lngInput.value = position.coords.longitude.toFixed(6);
+        status.style.color = 'var(--green)';
+        status.innerText = '✅ Coordinates captured successfully!';
+        btn.style.background = 'var(--green)';
+        btn.disabled = false;
+      },
+      function(error) {
+        btn.style.background = 'var(--green)';
+        btn.disabled = false;
+        status.style.color = '#c0392b';
+        if (error.code === error.PERMISSION_DENIED) {
+          status.innerText = '❌ Permission denied.';
+        } else {
+          status.innerText = '❌ Unable to get location.';
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  function handleSubmit() {
+    const name = document.querySelector('input[placeholder*="Ram Sharma"]').value;
+    const phone = document.querySelector('input[type="tel"]').value;
+    const lat = document.getElementById('latInput').value;
+    const lng = document.getElementById('lngInput').value;
+    const address = (lat && lng) ? `${lat}, ${lng}` : '—';
+    const msg = document.querySelector('textarea').value;
+    const text = `Hello Rambati Rice Mill!\n\nName: ${name || '—'}\nPhone: ${phone || '—'}\nLocation (Coordinates): ${address}\nOrder/Message: ${msg || '—'}`;
+    window.open(`https://wa.me/{{phone}}?text=${encodeURIComponent(text)}`, '_blank');
+  }
+
+  // ── Toast ──
+  function showIdxToast(msg, type='') {
+    let t = document.getElementById('idxToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'idxToast';
+      t.className = 'idx-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.className = 'idx-toast ' + type;
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── Auto-open order modal if redirected from login with ?order=1 ──
+  if (IS_LOGGED_IN && new URLSearchParams(window.location.search).get('next') === 'order') {
+    window.history.replaceState({}, '', '/');
+    setTimeout(openOrderModal, 400);
+  }
+  
+  if (IS_LOGGED_IN && new URLSearchParams(window.location.search).get('next') === 'feedback') {
+    window.history.replaceState({}, '', '/#testimonials');
+    setTimeout(openFeedbackModal, 400);
+  }
+
+  // Scroll-reveal animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeUp 0.6s ease both';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.svc-card, .prod-card, .testi-card, .about-grid, .contact-grid').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

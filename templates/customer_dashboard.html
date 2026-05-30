@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders – Rambati Rice Mill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2d5a27; --green-light: #3d7a35; --green-pale: #f0f7ee;
+    --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #faf8f3; --dark: #1a2317; --text: #3a3a2e; --text-muted: #7a7a6a;
+    --white: #fff;
+    --status-pending: #f39c12; --status-confirmed: #3498db;
+    --status-otd: #9b59b6; --status-delivered: #27ae60; --status-cancelled: #c0392b;
+    --shadow: 0 4px 24px rgba(45,90,39,0.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    background: rgba(250,248,243,0.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px; box-shadow: 0 2px 20px rgba(45,90,39,0.07);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--green); text-decoration: none; }
+  .nav-logo span { color: var(--gold); }
+  .nav-logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 10px rgba(45,90,39,0.25); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+  .nav-links a { text-decoration: none; color: var(--text); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  
+  .nav-user { display: flex; align-items: center; gap: 10px; }
+  .nav-user-name { font-size: 0.85rem; font-weight: 600; color: var(--green); }
+  .nav-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--green), var(--green-light)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85rem; font-weight: 700; }
+  .nav-logout { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; padding: 6px 12px; border-radius: 50px; border: 1px solid rgba(45,90,39,0.18); transition: all 0.2s; }
+  .nav-logout:hover { color: var(--green); border-color: var(--green); }
+
+  /* HEADER */
+  .page-header { background: linear-gradient(150deg, #1a2e17 0%, #2d5a27 45%, #3d7a35 100%); padding: 60px 5vw; text-align: center; color: #fff; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+  .page-sub { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+  /* CONTENT */
+  .container { max-width: 1000px; margin: -30px auto 60px; padding: 0 5vw; position: relative; z-index: 10; }
+  
+  .dashboard-card { background: var(--white); border-radius: 20px; box-shadow: var(--shadow); border: 1px solid rgba(45,90,39,0.06); padding: 30px; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--dark); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+  
+  /* ORDERS LIST */
+  .order-item { border: 1px solid rgba(45,90,39,0.1); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: transform 0.2s, box-shadow 0.2s; }
+  .order-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,90,39,0.08); }
+  .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px dashed rgba(45,90,39,0.1); padding-bottom: 14px; }
+  .order-id { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--green); font-size: 1.1rem; }
+  .order-date { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 4px; }
+  
+  .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .status-Pending { background: #fef9e7; color: var(--status-pending); }
+  .status-Confirmed { background: #e8f4fd; color: var(--status-confirmed); }
+  .status-Out-for-Delivery { background: #f5eef8; color: var(--status-otd); }
+  .status-Delivered { background: #eafaf1; color: var(--status-delivered); }
+  .status-Cancelled { background: #fdedec; color: var(--status-cancelled); }
+  .status-Out-of-Stock { background: #feebeb; color: #a93226; }
+
+  /* PROGRESS TRACKER */
+  .order-progress { display: flex; justify-content: space-between; position: relative; margin: 24px 0 32px; max-width: 600px; padding: 0 10px; }
+  .order-progress::before { content: ''; position: absolute; top: 12px; left: 30px; right: 30px; height: 4px; background: rgba(45,90,39,0.1); border-radius: 10px; z-index: 1; }
+  .progress-bar { position: absolute; top: 12px; left: 30px; height: 4px; background: var(--green); border-radius: 10px; z-index: 2; transition: width 0.4s; }
+  .progress-step { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 60px; }
+  .step-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--cream); border: 3px solid rgba(45,90,39,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: transparent; transition: all 0.3s; }
+  .step-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-align: center; line-height: 1.2; transition: color 0.3s; }
+  
+  .progress-step.active .step-icon { border-color: var(--green); background: var(--green); color: white; box-shadow: 0 0 0 4px rgba(45,90,39,0.1); }
+  .progress-step.active .step-label { color: var(--green); }
+  .progress-step.done .step-icon { border-color: var(--green); background: var(--green); color: white; }
+  .progress-step.done .step-label { color: var(--dark); }
+  .progress-step.cancelled .step-icon { border-color: var(--status-cancelled); background: var(--status-cancelled); color: white; }
+  .progress-step.cancelled .step-label { color: var(--status-cancelled); }
+
+  .order-details { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  .detail-group { margin-bottom: 10px; }
+  .detail-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .detail-val { font-size: 0.9rem; color: var(--dark); font-weight: 500; }
+  .detail-val.notes { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 40px 20px; }
+  .empty-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.8; }
+  .empty-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--dark); margin-bottom: 8px; }
+  .empty-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+  .btn-primary { display: inline-block; background: var(--green); color: var(--white); padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: background 0.2s, transform 0.2s; box-shadow: 0 4px 16px rgba(45,90,39,0.2); }
+  .btn-primary:hover { background: var(--green-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,90,39,0.3); }
+
+  @media (max-width: 600px) {
+    .order-details { grid-template-columns: 1fr; gap: 10px; }
+    .order-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    Rambati <span>Rice Mill</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li>
+      <div class="nav-user">
+        <div class="nav-user-avatar">{{ user_name[0].upper() }}</div>
+        <span class="nav-user-name">{{ user_name.split()[0] }}</span>
+      </div>
+    </li>
+    <li><a href="/logout" class="nav-logout">Sign Out</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1 class="page-title">My Orders</h1>
+  <p class="page-sub">Track your deliveries and view past orders</p>
+</div>
+
+<div class="container">
+  <div class="dashboard-card">
+    <div class="card-title">📦 Order History</div>
+    
+    {% if orders %}
+      {% for order in orders %}
+      <div class="order-item">
+        <div class="order-header">
+          <div>
+            <span class="order-id">Order #{{ order.id }}</span>
+            <span class="order-date">{{ order.created_at[:16] }}</span>
+          </div>
+          <span class="status-badge status-{{ order.status.replace(' ', '-') }}">{{ order.status }}</span>
+        </div>
+        
+        {% if order.status not in ['Cancelled', 'Out of Stock'] %}
+        <!-- Progress Tracker -->
+        <div class="order-progress">
+          <!-- Width calculation based on status -->
+          {% set p_width = '0%' %}
+          {% if order.status == 'Confirmed' %}{% set p_width = '33%' %}{% endif %}
+          {% if order.status == 'Out for Delivery' %}{% set p_width = '66%' %}{% endif %}
+          {% if order.status == 'Delivered' %}{% set p_width = '100%' %}{% endif %}
+          <div class="progress-bar" style="width: {{ p_width }};"></div>
+          
+          <div class="progress-step {% if order.status in ['Pending', 'Confirmed', 'Out for Delivery', 'Delivered'] %}done{% endif %}{% if order.status == 'Pending' %} active{% endif %}">
+            <div class="step-icon">✓</div>
+            <div class="step-label">Placed</div>
+          </div>
+          <div class="progress-step {% if order.status in ['Confirmed', 'Out for Delivery', 'Delivered'] %}done{% endif %}{% if order.status == 'Confirmed' %} active{% endif %}">
+            <div class="step-icon">✓</div>
+            <div class="step-label">Confirmed</div>
+          </div>
+          <div class="progress-step {% if order.status in ['Out for Delivery', 'Delivered'] %}done{% endif %}{% if order.status == 'Out for Delivery' %} active{% endif %}">
+            <div class="step-icon">✓</div>
+            <div class="step-label">On the way</div>
+          </div>
+          <div class="progress-step {% if order.status == 'Delivered' %}done active{% endif %}">
+            <div class="step-icon">✓</div>
+            <div class="step-label">Delivered</div>
+          </div>
+        </div>
+        {% else %}
+        <div class="order-progress" style="max-width: 200px;">
+          <div class="progress-step cancelled active">
+            <div class="step-icon">✕</div>
+            <div class="step-label">{{ order.status }}</div>
+          </div>
+        </div>
+        {% endif %}
+        
+        <div class="order-details">
+          <div>
+            <div class="detail-group">
+              <div class="detail-label">Items</div>
+              <div class="detail-val">{{ order.items }}</div>
+            </div>
+            <div class="detail-group">
+              <div class="detail-label">Delivery Coordinates / Address</div>
+              <div class="detail-val">📍 {{ order.address }}</div>
+            </div>
+          </div>
+          <div>
+            <div class="detail-group">
+              <div class="detail-label">Quantity</div>
+              <div class="detail-val">{{ order.quantity }}</div>
+            </div>
+            {% if order.notes %}
+            <div class="detail-group">
+              <div class="detail-label">Notes</div>
+              <div class="detail-val notes">"{{ order.notes }}"</div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <div class="empty-title">No orders yet</div>
+        <p class="empty-sub">You haven't placed any orders with us. Start enjoying fresh rice and flour today!</p>
+        <a href="/?next=order" class="btn-primary">Order Now</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+</body>
+</html>

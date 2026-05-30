@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Sign Up – Rambati Rice Mill</title>
+<meta name="description" content="Sign in or create your account at Rambati Rice Mill to place orders for fresh rice and flour.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2d5a27;--green-light:#3d7a35;--green-pale:#f0f7ee;
+    --gold:#c9a84c;--gold-light:#e8c97a;
+    --owner:#1a2e4a;--owner-light:#2a4a6a;--owner-accent:#4a90d9;--owner-pale:#eaf2fb;
+    --cream:#faf8f3;--dark:#1a2317;--text:#3a3a2e;--text-muted:#7a7a6a;
+    --white:#fff;--error:#c0392b;--success:#27ae60;
+    --active-color:var(--green);--active-pale:var(--green-pale);
+    --panel-grad:linear-gradient(155deg,#1a2e17 0%,#2d5a27 55%,#3d7a35 100%);
+  }
+  body.owner-mode{
+    --active-color:var(--owner-accent);--active-pale:var(--owner-pale);
+    --green:var(--owner);--green-light:var(--owner-light);--green-pale:var(--owner-pale);
+    --panel-grad:linear-gradient(155deg,#0d1c2e 0%,#1a2e4a 55%,#2a4a6a 100%);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'DM Sans',sans-serif;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:var(--cream);transition:all 0.5s}
+
+  /* ── TAB SWITCHER ── */
+  .auth-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--cream);border-radius:14px;padding:4px;border:1.5px solid rgba(45,90,39,0.12)}
+  .auth-tab{flex:1;padding:10px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--text-muted);cursor:pointer;border-radius:11px;transition:all .25s}
+  .auth-tab.active{background:var(--white);color:var(--green);box-shadow:0 2px 8px rgba(45,90,39,0.12)}
+  body.owner-mode .auth-tab.active{color:var(--owner-accent)}
+
+  /* ── SIGN IN PANEL ── */
+  .signin-form{display:none}
+  .signin-form.active{display:block;animation:fadeUp .4s ease both}
+  .signup-form{display:none}
+  .signup-form.active{display:block}
+
+  /* DECO PANEL */
+  .panel-deco{background:var(--panel-grad);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 44px;position:relative;overflow:hidden;order:2;transition:background 0.5s}
+  .panel-deco::before{content:'';position:absolute;top:-10%;left:-20%;width:65%;height:65%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,transparent 70%);pointer-events:none}
+  .panel-deco::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 70%);pointer-events:none}
+  .grain{position:absolute;inset:0;pointer-events:none;opacity:0.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+  .deco-content{position:relative;z-index:2;text-align:center}
+  .deco-icon{font-size:4.5rem;margin-bottom:20px;display:block;animation:float 3.5s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+  .deco-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:#fff;line-height:1.2;margin-bottom:9px}
+  .deco-title em{color:var(--gold-light);font-style:italic}
+  .deco-sub{color:rgba(255,255,255,0.58);font-size:0.87rem;line-height:1.7;max-width:270px;margin:0 auto 38px}
+  .steps{display:flex;flex-direction:column;gap:0;width:100%;max-width:270px}
+  .step-row{display:flex;align-items:flex-start;gap:14px;position:relative;padding-bottom:22px;animation:slideR .5s ease both}
+  .step-row:last-child{padding-bottom:0}
+  .step-row:nth-child(1){animation-delay:.1s}.step-row:nth-child(2){animation-delay:.2s}.step-row:nth-child(3){animation-delay:.3s}
+  @keyframes slideR{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .step-num{width:32px;height:32px;flex-shrink:0;background:rgba(201,168,76,0.22);border:1px solid rgba(201,168,76,0.45);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:0.9rem;color:var(--gold-light);position:relative;z-index:1}
+  .step-line{position:absolute;left:15px;top:32px;width:2px;height:calc(100% - 32px);background:rgba(255,255,255,0.1)}
+  .step-row:last-child .step-line{display:none}
+  .step-text strong{display:block;color:#fff;font-size:0.86rem;font-weight:600;margin-bottom:2px}
+  .step-text span{color:rgba(255,255,255,0.5);font-size:0.75rem}
+  .deco-bottom{margin-top:42px;position:relative;z-index:2;text-align:center}
+  .deco-bottom p{color:rgba(255,255,255,0.42);font-size:0.77rem}
+  .deco-bottom a{color:var(--gold-light);text-decoration:none;font-weight:600}
+
+  /* FORM PANEL */
+  .panel-form{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:44px 48px;background:#fff;overflow-y:auto;order:1}
+  .form-box{width:100%;max-width:430px;animation:fadeUp .6s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+  .back-home{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);text-decoration:none;font-size:.82rem;font-weight:600;margin-bottom:24px;transition:color .2s}
+  .back-home:hover{color:var(--green)}
+
+  /* ROLE SELECTOR */
+  .role-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:26px}
+  .role-card{border:2px solid rgba(45,90,39,0.13);border-radius:15px;padding:15px 12px;cursor:pointer;text-align:center;transition:all 0.25s;background:var(--cream);position:relative}
+  .role-card.active{border-color:var(--active-color);background:var(--active-pale);box-shadow:0 4px 16px rgba(45,90,39,0.12)}
+  body.owner-mode .role-card.active{box-shadow:0 4px 16px rgba(74,144,217,0.18)}
+  .role-icon{font-size:1.8rem;margin-bottom:6px;display:block}
+  .role-name{font-weight:700;font-size:0.87rem;color:var(--dark)}
+  .role-desc{font-size:0.72rem;color:var(--text-muted);margin-top:3px}
+  .role-check{position:absolute;top:8px;right:8px;width:17px;height:17px;background:var(--active-color);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:#fff;opacity:0;transition:opacity .2s}
+  .role-card.active .role-check{opacity:1}
+
+  .form-label-top{display:inline-flex;align-items:center;gap:7px;font-size:0.73rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;transition:color .4s}
+  body.owner-mode .form-label-top{color:var(--owner-accent)}
+  .form-label-top::before{content:'✦';font-size:.62rem}
+  .form-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--dark);line-height:1.15;margin-bottom:6px}
+  .form-title em{color:var(--green);font-style:italic;transition:color .4s}
+  body.owner-mode .form-title em{color:var(--owner-accent)}
+  .form-sub{color:var(--text-muted);font-size:0.86rem;line-height:1.6;margin-bottom:0}
+
+  /* PROGRESS */
+  .progress-wrap{margin:20px 0 22px}
+  .prog-steps{display:flex;gap:5px;margin-bottom:7px}
+  .prog-step{flex:1;height:4px;border-radius:10px;background:rgba(45,90,39,0.1);transition:background .4s}
+  .prog-step.active{background:var(--active-color)}
+  .prog-step.done{background:var(--gold)}
+  .prog-label{font-size:0.74rem;color:var(--text-muted)}
+  .prog-label span{color:var(--active-color);font-weight:600;transition:color .4s}
+
+  /* FIELDS */
+  .form-step{display:none}
+  .form-step.active{display:block;animation:fadeUp .4s ease both}
+  .field{margin-bottom:15px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .field label{display:block;font-size:0.73rem;font-weight:700;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px}
+  .input-wrap{position:relative;display:flex;align-items:center}
+  .input-icon{position:absolute;left:14px;font-size:.97rem;pointer-events:none;z-index:1}
+  .input-wrap input,.input-wrap select{width:100%;padding:12px 42px 12px 42px;border:1.5px solid rgba(45,90,39,0.15);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--dark);background:var(--cream);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+  .input-wrap input:focus,.input-wrap select:focus{border-color:var(--active-color);box-shadow:0 0 0 3px rgba(45,90,39,0.07);background:#fff}
+  body.owner-mode .input-wrap input:focus,body.owner-mode .input-wrap select:focus{box-shadow:0 0 0 3px rgba(74,144,217,0.1)}
+  .input-wrap input.error-field{border-color:var(--error)}
+  .no-right input{padding-right:14px}
+  .toggle-pw{position:absolute;right:12px;cursor:pointer;font-size:.9rem;user-select:none;z-index:1;color:var(--text-muted)}
+  .toggle-pw:hover{color:var(--green)}
+  .field-error{color:var(--error);font-size:.72rem;margin-top:4px;display:none;padding-left:3px}
+
+  /* OWNER-ONLY & CUSTOMER-ONLY */
+  .owner-only{display:none}
+  body.owner-mode .owner-only{display:block}
+  .customer-only{display:block}
+  body.owner-mode .customer-only{display:none}
+
+  /* LOCATION */
+  .loc-row{display:flex;gap:8px}
+  .loc-row .input-wrap{flex:1}
+  .loc-coord-row{display:flex;gap:8px;flex:1}
+  .loc-coord-row .input-wrap{flex:1}
+  .btn-geo{background:var(--green);color:#fff;border:none;padding:12px 13px;border-radius:12px;cursor:pointer;font-size:.95rem;transition:background .2s,transform .15s;flex-shrink:0}
+  .btn-geo:hover{background:var(--green-light);transform:translateY(-1px)}
+  body.owner-mode .btn-geo{background:var(--owner-accent)}
+  .geo-status{font-size:.72rem;color:var(--text-muted);margin-top:4px;min-height:15px}
+
+  /* PW STRENGTH */
+  .pw-strength{margin-top:7px}
+  .pw-bars{display:flex;gap:4px;margin-bottom:3px}
+  .pw-bar{flex:1;height:3px;border-radius:6px;background:rgba(45,90,39,0.1);transition:background .3s}
+  .pw-bar.weak{background:var(--error)}.pw-bar.fair{background:var(--gold)}.pw-bar.strong{background:var(--success)}
+  .pw-label{font-size:.7rem;color:var(--text-muted)}
+
+  /* TERMS */
+  .terms-wrap{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;cursor:pointer}
+  .terms-wrap input[type="checkbox"]{display:none}
+  .custom-check{width:17px;height:17px;flex-shrink:0;margin-top:2px;border:2px solid rgba(45,90,39,0.22);border-radius:5px;position:relative;transition:all .2s;background:var(--cream)}
+  .terms-wrap input:checked+.custom-check{background:var(--active-color);border-color:var(--active-color)}
+  .terms-wrap input:checked+.custom-check::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:.67rem;font-weight:700}
+  .terms-text{font-size:.8rem;color:var(--text-muted);line-height:1.5}
+  .terms-text a{color:var(--green);text-decoration:none;font-weight:600}
+  body.owner-mode .terms-text a{color:var(--owner-accent)}
+
+  /* OWNER NOTICE */
+  .owner-notice{display:none;background:var(--owner-pale);border:1px solid rgba(74,144,217,0.25);border-radius:11px;padding:12px 15px;margin-bottom:16px;font-size:.8rem;color:var(--owner);line-height:1.55}
+  body.owner-mode .owner-notice{display:block}
+  .owner-notice strong{display:block;margin-bottom:3px}
+
+  /* BUTTONS */
+  .btn-row{display:flex;gap:10px}
+  .btn-back{padding:13px 20px;border-radius:50px;background:var(--cream);color:var(--text);border:1.5px solid rgba(45,90,39,0.15);font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .btn-back:hover{border-color:var(--active-color);color:var(--active-color)}
+  .btn-next{flex:1;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(45,90,39,0.26);transition:transform .2s,box-shadow .2s,background .4s;position:relative;overflow:hidden}
+  body.owner-mode .btn-next{background:linear-gradient(135deg,var(--owner),var(--owner-light));box-shadow:0 4px 16px rgba(26,46,74,0.28)}
+  .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(45,90,39,0.34)}
+  .btn-next.loading{pointer-events:none;opacity:.8}
+  .btn-text{transition:opacity .2s}
+  .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+  .btn-next.loading .btn-text{opacity:0}
+  .btn-next.loading .spinner{display:block}
+
+  /* SUCCESS */
+  .success-box{display:none;text-align:center;padding:16px 0;animation:fadeUp .5s ease both}
+  .success-icon{width:78px;height:78px;background:linear-gradient(135deg,#e8f8ed,#d4edce);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 18px;border:2px solid rgba(39,174,96,.22)}
+  .success-title{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:800;color:var(--dark);margin-bottom:9px}
+  .success-sub{color:var(--text-muted);font-size:.88rem;line-height:1.65;margin-bottom:26px}
+  .btn-go{display:inline-block;padding:13px 34px;background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;border-radius:50px;text-decoration:none;font-weight:700;font-size:.95rem;box-shadow:0 4px 16px rgba(45,90,39,.28);transition:transform .2s}
+  body.owner-mode .btn-go{background:linear-gradient(135deg,var(--owner),var(--owner-light))}
+  .btn-go:hover{transform:translateY(-2px)}
+
+  .bottom-link{text-align:center;margin-top:20px;font-size:.86rem;color:var(--text-muted)}
+  .bottom-link a{color:var(--green);font-weight:700;text-decoration:none}
+  body.owner-mode .bottom-link a{color:var(--owner-accent)}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;padding:12px 24px;border-radius:50px;font-size:.85rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.2);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:9999;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.error{background:var(--error)}
+  .toast.success-toast{background:var(--success)}
+
+  /* SIGNIN specific */
+  .signin-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text-muted);font-size:.8rem}
+  .signin-divider::before,.signin-divider::after{content:'';flex:1;height:1px;background:rgba(45,90,39,0.12)}
+
+  @media(max-width:768px){body{grid-template-columns:1fr}.panel-deco{display:none}.panel-form{padding:34px 22px;min-height:100vh}.field-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body id="body">
+
+<!-- FORM PANEL -->
+<div class="panel-form">
+  <div class="form-box">
+
+    <a href="/" class="back-home">← Back to Homepage</a>
+
+    <!-- AUTH TABS -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabSignIn" onclick="switchTab('signin')">Sign In</button>
+      <button class="auth-tab" id="tabSignUp" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- ══════════════════════════ SIGN IN FORM ══════════════════════════ -->
+    <div class="signin-form active" id="signinSection">
+      <div class="form-label-top">Welcome Back</div>
+      <h1 class="form-title">Sign In to <em>Your Account</em></h1>
+      <p class="form-sub" style="margin-bottom:24px;">Enter your phone number and password to continue.</p>
+
+      <div class="field">
+        <label>Phone Number</label>
+        <div class="input-wrap no-right">
+          <span class="input-icon">📱</span>
+          <input type="tel" id="si_phone" placeholder="98XXXXXXXX" autocomplete="tel">
+        </div>
+        <div class="field-error" id="si_phoneErr">Enter your registered phone number.</div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="si_password" placeholder="Your password" autocomplete="current-password">
+          <span class="toggle-pw" onclick="togglePass('si_password',this)">👁️</span>
+        </div>
+        <div class="field-error" id="si_passwordErr">Password is required.</div>
+      </div>
+
+      <div id="si_errorBox" style="display:none;background:#fff0f0;border:1px solid rgba(192,57,43,0.3);border-radius:11px;padding:11px 14px;margin-bottom:14px;font-size:.83rem;color:var(--error)"></div>
+
+      <button class="btn-next" id="signinBtn" onclick="handleSignIn()" style="width:100%">
+        <span class="btn-text">Sign In →</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="signin-divider">or</div>
+
+      <div style="text-align:center;font-size:.86rem;color:var(--text-muted)">
+        Don't have an account? <a href="#" style="color:var(--green);font-weight:700;text-decoration:none" onclick="switchTab('signup');return false">Create one free</a>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ SIGN UP FORM ══════════════════════════ -->
+    <div class="signup-form" id="signupSection">
+
+      <!-- ROLE SELECTOR -->
+      <div class="role-selector">
+        <div class="role-card active" id="roleCustomer" onclick="setRole('customer')">
+          <div class="role-check">✓</div>
+          <span class="role-icon">🛒</span>
+          <div class="role-name">Customer</div>
+          <div class="role-desc">Buy rice & flour</div>
+        </div>
+        <div class="role-card" id="roleOwner" onclick="setRole('owner')">
+          <div class="role-check">✓</div>
+          <span class="role-icon">👑</span>
+          <div class="role-name">Owner / Staff</div>
+          <div class="role-desc">Manage the mill</div>
+        </div>
+      </div>
+
+      <div class="form-label-top" id="topLabel">Join Rambati</div>
+      <h2 class="form-title">Create your <em id="roleTitle">Account</em></h2>
+      <p class="form-sub" id="formSub">Get fresh rice & flour delivered to your door. Takes less than a minute.</p>
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap">
+        <div class="prog-steps">
+          <div class="prog-step active" id="ps1"></div>
+          <div class="prog-step" id="ps2"></div>
+          <div class="prog-step" id="ps3"></div>
+        </div>
+        <div class="prog-label">Step <span id="stepNum">1</span> of 3 — <span id="stepName">Personal Info</span></div>
+      </div>
+
+      <!-- ══ STEP 1 ══ -->
+      <div class="form-step active" id="step1">
+        <div class="owner-notice">
+          <strong>🔐 Owner / Staff Registration</strong>
+          You will need the Owner Activation Key in Step 3. Contact the mill admin for the key.
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>First Name</label>
+            <div class="input-wrap no-right">
+              <span class="input-icon">👤</span>
+              <input type="text" id="fname" placeholder="Ram">
+            </div>
+            <div class="field-error" id="fnameErr">Required</div>
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <div class="input-wrap no-right">
+              <span class="input-icon">👤</span>
+              <input type="text" id="lname" placeholder="Sharma">
+            </div>
+            <div class="field-error" id="lnameErr">Required</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Phone Number</label>
+          <div class="input-wrap no-right">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="phone" placeholder="98XXXXXXXX">
+          </div>
+          <div class="field-error" id="phoneErr">Enter a valid 10-digit phone number.</div>
+        </div>
+
+        <div class="field">
+          <label id="emailLabel">Email Address <span style="color:var(--text-muted);font-weight:400;text-transform:none">(optional)</span></label>
+          <div class="input-wrap no-right">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="email" placeholder="yourname@gmail.com">
+          </div>
+          <div class="field-error" id="emailErr">Enter a valid email.</div>
+        </div>
+
+        <!-- Owner-only -->
+        <div class="field owner-only">
+          <label>Role / Designation</label>
+          <div class="input-wrap">
+            <span class="input-icon">🪪</span>
+            <select id="designation">
+              <option value="">Select your role</option>
+              <option>Mill Owner</option>
+              <option>Manager</option>
+              <option>Accountant</option>
+              <option>Delivery Staff</option>
+              <option>Other Staff</option>
+            </select>
+          </div>
+          <div class="field-error" id="desigErr">Please select your role.</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-next" onclick="goStep(2)">
+            <span class="btn-text">Continue →</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 2 ══ -->
+      <div class="form-step" id="step2">
+
+        <!-- Customer: address & order prefs -->
+        <div class="customer-only">
+          <div class="field">
+            <label>Delivery Location (Coordinates)</label>
+            <div class="loc-row">
+              <div class="loc-coord-row">
+                <div class="input-wrap no-right">
+                  <span class="input-icon">📍</span>
+                  <input type="text" id="addressLat" placeholder="Latitude">
+                </div>
+                <div class="input-wrap no-right">
+                  <span class="input-icon">📍</span>
+                  <input type="text" id="addressLng" placeholder="Longitude">
+                </div>
+              </div>
+              <button class="btn-geo" onclick="getLocation()" id="geoBtn" title="Auto-detect">📍</button>
+            </div>
+            <div class="geo-status" id="geoStatus">Click 📍 to auto-detect or enter coordinates manually</div>
+            <div class="field-error" id="addressErr">Please enter your location coordinates.</div>
+          </div>
+          <div class="field">
+            <label>City / District</label>
+            <div class="input-wrap">
+              <span class="input-icon">🏙️</span>
+              <select id="city">
+                <option value="">Select city</option>
+                <option>Kathmandu</option><option>Lalitpur (Patan)</option>
+                <option>Bhaktapur</option><option>Kirtipur</option>
+                <option>Pokhara</option><option>Chitwan</option>
+                <option>Butwal</option><option>Dharan</option>
+                <option>Inaruwa</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field-error" id="cityErr">Please select your city.</div>
+          </div>
+          <div class="field">
+            <label>Order Type Preference</label>
+            <div class="input-wrap">
+              <span class="input-icon">📦</span>
+              <select id="orderType">
+                <option value="">Select order type</option>
+                <option>Household (small quantity)</option>
+                <option>Household (bulk)</option>
+                <option>Shop / Restaurant (wholesale)</option>
+                <option>One-time order</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Owner: business details -->
+        <div class="owner-only">
+          <div class="field">
+            <label>Mill / Business Name</label>
+            <div class="input-wrap no-right">
+              <span class="input-icon">🏭</span>
+              <input type="text" id="bizName" placeholder="e.g. Rambati Rice Mill">
+            </div>
+            <div class="field-error" id="bizNameErr">Required</div>
+          </div>
+          <div class="field">
+            <label>Business Location (Coordinates)</label>
+            <div class="loc-row">
+              <div class="loc-coord-row">
+                <div class="input-wrap no-right">
+                  <span class="input-icon">📍</span>
+                  <input type="text" id="bizAddrLat" placeholder="Latitude">
+                </div>
+                <div class="input-wrap no-right">
+                  <span class="input-icon">📍</span>
+                  <input type="text" id="bizAddrLng" placeholder="Longitude">
+                </div>
+              </div>
+              <button class="btn-geo" onclick="getLocationOwner()" id="geoBtnOwner" title="Auto-detect">📍</button>
+            </div>
+            <div class="geo-status" id="geoStatusOwner">Click 📍 to auto-detect or enter coordinates manually</div>
+            <div class="field-error" id="bizAddrErr">Required</div>
+          </div>
+          <div class="field">
+            <label>Business Registration No. <span style="color:var(--text-muted);font-weight:400;text-transform:none">(if available)</span></label>
+            <div class="input-wrap no-right">
+              <span class="input-icon">📋</span>
+              <input type="text" id="regNo" placeholder="e.g. PAN / VAT / Reg. No.">
+            </div>
+          </div>
+          <div class="field">
+            <label>Number of Staff</label>
+            <div class="input-wrap">
+              <span class="input-icon">👥</span>
+              <select id="staffCount">
+                <option value="">Select range</option>
+                <option>Just me (1)</option><option>2–5</option>
+                <option>6–10</option><option>10+</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">
+            <span class="btn-text">Continue →</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 3 ══ -->
+      <div class="form-step" id="step3">
+        <div class="field">
+          <label>Create Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="pw1" placeholder="Minimum 8 characters" oninput="checkStrength()">
+            <span class="toggle-pw" onclick="togglePass('pw1',this)">👁️</span>
+          </div>
+          <div class="pw-strength">
+            <div class="pw-bars"><div class="pw-bar" id="b1"></div><div class="pw-bar" id="b2"></div><div class="pw-bar" id="b3"></div><div class="pw-bar" id="b4"></div></div>
+            <div class="pw-label" id="pwLabel">Enter a password</div>
+          </div>
+          <div class="field-error" id="pw1Err">Password must be at least 8 characters.</div>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔐</span>
+            <input type="password" id="pw2" placeholder="Re-enter your password">
+            <span class="toggle-pw" onclick="togglePass('pw2',this)">👁️</span>
+          </div>
+          <div class="field-error" id="pw2Err">Passwords do not match.</div>
+        </div>
+
+        <!-- Owner: secret key -->
+        <div class="field owner-only">
+          <label>Owner Activation Key</label>
+          <div class="input-wrap">
+            <span class="input-icon">🗝️</span>
+            <input type="password" id="ownerKey" placeholder="Enter key provided by admin">
+            <span class="toggle-pw" onclick="togglePass('ownerKey',this)">👁️</span>
+          </div>
+          <div class="field-error" id="ownerKeyErr">Activation key is required.</div>
+        </div>
+
+        <label class="terms-wrap">
+          <input type="checkbox" id="termsCheck">
+          <div class="custom-check"></div>
+          <span class="terms-text">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of Rambati Rice Mill.</span>
+        </label>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" id="submitBtn" onclick="handleSignup()">
+            <span class="btn-text" id="submitText">Create Account 🌾</span>
+            <div class="spinner"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon" id="successIcon">✅</div>
+        <div class="success-title" id="successTitle">Account Created!</div>
+        <p class="success-sub" id="successSub">Welcome to Rambati Rice Mill! Your account is ready.</p>
+        <a href="/" class="btn-go" id="successBtn">🌾 Start Shopping</a>
+      </div>
+
+      <div class="bottom-link" id="bottomLink">
+        Already have an account? <a href="#" onclick="switchTab('signin');return false">Sign in</a>
+      </div>
+    </div>
+    <!-- end signup -->
+
+  </div>
+</div>
+
+<!-- DECO PANEL -->
+<div class="panel-deco">
+  <div class="grain"></div>
+  <div class="deco-content">
+    <span class="deco-icon" id="decoIcon">🌾</span>
+    <div class="deco-title" id="decoTitle">Fresh Grains,<br><em>Delivered Fast</em></div>
+    <p class="deco-sub" id="decoSub">Join hundreds of Nepali families and shops who trust Rambati Rice Mill for pure, fresh, affordable grain products.</p>
+    <div class="steps" id="decoSteps">
+      <div class="step-row"><div class="step-num">1</div><div class="step-line"></div><div class="step-text"><strong>Create your account</strong><span>Fill in your details — 1 minute</span></div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-line"></div><div class="step-text"><strong>Place your order</strong><span>Select products & quantity</span></div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-line"></div><div class="step-text"><strong>Receive at your door</strong><span>Pay cash on delivery — easy!</span></div></div>
+    </div>
+  </div>
+  <div class="deco-bottom"><p>Trusted by 500+ Nepali families 🇳🇵</p></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Read next param from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const nextPage = urlParams.get('next') || '/';
+
+  // Check if we should open order directly after login
+  const openOrder = nextPage.includes('order');
+
+  let currentRole = 'customer';
+  let currentStep = 1;
+  const stepNames = ['Personal Info', 'Details', 'Set Password'];
+
+  // ── Tab Switching ──
+  function switchTab(tab) {
+    const signinSection = document.getElementById('signinSection');
+    const signupSection = document.getElementById('signupSection');
+    const tabSignIn = document.getElementById('tabSignIn');
+    const tabSignUp = document.getElementById('tabSignUp');
+    if (tab === 'signin') {
+      signinSection.classList.add('active');
+      signupSection.classList.remove('active');
+      tabSignIn.classList.add('active');
+      tabSignUp.classList.remove('active');
+      document.getElementById('decoIcon').textContent = '🔑';
+      document.getElementById('decoTitle').innerHTML = 'Welcome<br><em>Back!</em>';
+      document.getElementById('decoSub').textContent = 'Sign in to place orders, track deliveries, and manage your account with Rambati Rice Mill.';
+    } else {
+      signinSection.classList.remove('active');
+      signupSection.classList.add('active');
+      tabSignIn.classList.remove('active');
+      tabSignUp.classList.add('active');
+      document.getElementById('decoIcon').textContent = '🌾';
+      document.getElementById('decoTitle').innerHTML = 'Fresh Grains,<br><em>Delivered Fast</em>';
+      document.getElementById('decoSub').textContent = 'Join hundreds of Nepali families and shops who trust Rambati Rice Mill for pure, fresh, affordable grain products.';
+    }
+  }
+
+  // Check URL for ?tab=signup
+  if (urlParams.get('tab') === 'signup') switchTab('signup');
+
+  // ── Sign In ──
+  async function handleSignIn() {
+    const phone = document.getElementById('si_phone').value.trim();
+    const password = document.getElementById('si_password').value;
+    let ok = true;
+
+    document.getElementById('si_phoneErr').style.display = 'none';
+    document.getElementById('si_passwordErr').style.display = 'none';
+    document.getElementById('si_errorBox').style.display = 'none';
+
+    if (!phone) { document.getElementById('si_phoneErr').style.display = 'block'; ok = false; }
+    if (!password) { document.getElementById('si_passwordErr').style.display = 'block'; ok = false; }
+    if (!ok) return;
+
+    const btn = document.getElementById('signinBtn');
+    btn.classList.add('loading');
+
+    try {
+      const res = await fetch('/login-user', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ phone, password, next: nextPage })
+      });
+      const data = await res.json();
+      btn.classList.remove('loading');
+
+      if (data.success) {
+        showToast('✅ Signed in as ' + data.name, 'success-toast');
+        setTimeout(() => {
+          window.location.href = data.redirect || '/';
+        }, 800);
+      } else {
+        document.getElementById('si_errorBox').textContent = '❌ ' + data.message;
+        document.getElementById('si_errorBox').style.display = 'block';
+      }
+    } catch(e) {
+      btn.classList.remove('loading');
+      showToast('Network error. Please try again.', 'error');
+    }
+  }
+
+  // Allow Enter key on sign in
+  document.getElementById('si_password').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSignIn();
+  });
+  document.getElementById('si_phone').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSignIn();
+  });
+
+  // ── Role ──
+  const roleConfig = {
+    customer: {
+      topLabel:'Join Rambati', roleTitle:'Account',
+      sub:'Get fresh rice & flour delivered to your door. Takes less than a minute.',
+      submitText:'Create Account 🌾',
+      decoIcon:'🌾', decoTitle:'Fresh Grains,<br><em>Delivered Fast</em>',
+      decoSub:'Join hundreds of Nepali families who trust Rambati Rice Mill for fresh, affordable grain products.',
+      steps:[
+        {n:1,title:'Create your account',desc:'Fill in your details — 1 minute'},
+        {n:2,title:'Set delivery address',desc:'So we know where to deliver'},
+        {n:3,title:'Receive at your door',desc:'Pay cash on delivery — easy!'}
+      ],
+      successIcon:'✅', successTitle:'Account Created!',
+      successSub:'Welcome to Rambati Rice Mill! Your account is ready. Now sign in to start ordering.',
+      successBtn:'🔑 Sign In Now', successHref:'/login'
+    },
+    owner: {
+      topLabel:'Owner Portal', roleTitle:'Owner Dashboard',
+      sub:'Register as an owner to manage orders, inventory, and customers.',
+      submitText:'Register as Owner →',
+      decoIcon:'👑', decoTitle:'Manage Your<br><em>Mill with Ease</em>',
+      decoSub:'The owner dashboard gives you full control — track orders, manage inventory, monitor revenue, and serve customers better.',
+      steps:[
+        {n:1,title:'Register your account',desc:'Provide staff details & role'},
+        {n:2,title:'Verify business info',desc:'Mill name, location & reg. no.'},
+        {n:3,title:'Access your dashboard',desc:'Manage everything in one place'}
+      ],
+      successIcon:'👑', successTitle:'Owner Account Created!',
+      successSub:'Your owner account is ready. Sign in to access the dashboard and manage orders.',
+      successBtn:'🔑 Sign In as Owner', successHref:'/login'
+    }
+  };
+
+  function setRole(role) {
+    currentRole = role;
+    const c = roleConfig[role];
+    const body = document.getElementById('body');
+    role==='owner' ? body.classList.add('owner-mode') : body.classList.remove('owner-mode');
+    document.getElementById('roleCustomer').classList.toggle('active', role==='customer');
+    document.getElementById('roleOwner').classList.toggle('active', role==='owner');
+    document.getElementById('topLabel').textContent = c.topLabel;
+    document.getElementById('roleTitle').textContent = c.roleTitle;
+    document.getElementById('formSub').textContent = c.sub;
+    document.getElementById('submitText').textContent = c.submitText;
+    document.getElementById('decoIcon').textContent = c.decoIcon;
+    document.getElementById('decoTitle').innerHTML = c.decoTitle;
+    document.getElementById('decoSub').textContent = c.decoSub;
+    document.getElementById('decoSteps').innerHTML = c.steps.map(s=>`
+      <div class="step-row">
+        <div class="step-num">${s.n}</div>
+        <div class="step-line"></div>
+        <div class="step-text"><strong>${s.title}</strong><span>${s.desc}</span></div>
+      </div>`).join('');
+    if (role==='owner') {
+      document.getElementById('emailLabel').innerHTML = 'Official Email <span style="color:var(--owner-accent);font-weight:600;text-transform:none">(required)</span>';
+    } else {
+      document.getElementById('emailLabel').innerHTML = 'Email Address <span style="color:var(--text-muted);font-weight:400;text-transform:none">(optional)</span>';
+    }
+  }
+
+  function goStep(n) {
+    if (n > currentStep && !validateStep(currentStep)) return;
+    document.getElementById('step'+currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('step'+currentStep).classList.add('active');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    document.getElementById('stepNum').textContent = currentStep;
+    document.getElementById('stepName').textContent = stepNames[currentStep-1];
+    [1,2,3].forEach(i=>{
+      const el = document.getElementById('ps'+i);
+      el.className='prog-step'+(i<currentStep?' done':i===currentStep?' active':'');
+    });
+  }
+
+  function validateStep(s) {
+    let ok = true;
+    if (s===1) {
+      const fn=v('fname'), ln=v('lname'), ph=v('phone'), em=v('email');
+      setE('fname','fnameErr',!fn); if(!fn) ok=false;
+      setE('lname','lnameErr',!ln); if(!ln) ok=false;
+      const pv=/^[9][6-9]\d{8}$/.test(ph)||(ph.length===10&&/^\d+$/.test(ph));
+      setE('phone','phoneErr',!pv); if(!pv) ok=false;
+      if (currentRole==='owner' && !em) { setE('email','emailErr',true); ok=false; }
+      else if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setE('email','emailErr',true); ok=false; }
+      else setE('email','emailErr',false);
+      if (currentRole==='owner') {
+        const d=v('designation'); setE('designation','desigErr',!d); if(!d) ok=false;
+      }
+    }
+    if (s===2) {
+      if (currentRole==='customer') {
+        const lat=v('addressLat'), lng=v('addressLng'), city=v('city');
+        const hasCoords = lat && lng;
+        setE('addressLat','addressErr',!hasCoords); if(!hasCoords) ok=false;
+        setE('city','cityErr',!city); if(!city) ok=false;
+      } else {
+        const bn=v('bizName'), blat=v('bizAddrLat'), blng=v('bizAddrLng');
+        const hasCoords = blat && blng;
+        setE('bizName','bizNameErr',!bn); if(!bn) ok=false;
+        setE('bizAddrLat','bizAddrErr',!hasCoords); if(!hasCoords) ok=false;
+      }
+    }
+    return ok;
+  }
+
+  async function handleSignup() {
+    const p1=v('pw1'), p2=v('pw2'), terms=document.getElementById('termsCheck').checked;
+    let ok=true;
+    setE('pw1','pw1Err',p1.length<8); if(p1.length<8) ok=false;
+    setE('pw2','pw2Err',p1!==p2); if(p1!==p2) ok=false;
+    if (currentRole==='owner') {
+      const key=v('ownerKey'); setE('ownerKey','ownerKeyErr',!key); if(!key) ok=false;
+    }
+    if (!terms) { showToast('Please agree to the Terms & Privacy Policy','error'); return; }
+    if (!ok) return;
+
+    const btn=document.getElementById('submitBtn');
+    btn.classList.add('loading');
+
+    const payload = {
+      role: currentRole,
+      first_name: v('fname'), last_name: v('lname'),
+      phone: v('phone'), email: v('email'),
+      password: p1
+    };
+    if (currentRole === 'customer') {
+      payload.latitude = v('addressLat'); payload.longitude = v('addressLng');
+      payload.city = v('city'); payload.order_type = v('orderType');
+    } else {
+      payload.designation = v('designation'); payload.biz_name = v('bizName');
+      payload.biz_lat = v('bizAddrLat'); payload.biz_lng = v('bizAddrLng');
+      payload.reg_no = v('regNo'); payload.staff_count = v('staffCount');
+      payload.owner_key = v('ownerKey');
+    }
+
+    try {
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      btn.classList.remove('loading');
+
+      if (data.success) {
+        const c = roleConfig[currentRole];
+        ['step3','bottomLink'].forEach(id=>document.getElementById(id).style.display='none');
+        document.querySelector('.progress-wrap').style.display='none';
+        document.querySelectorAll('.form-title,.form-sub,.form-label-top,.role-selector').forEach(el=>el.style.display='none');
+        const sb=document.getElementById('successBox');
+        sb.style.display='block';
+        sb.querySelector('.success-icon').textContent=c.successIcon;
+        document.getElementById('successTitle').textContent=c.successTitle;
+        document.getElementById('successSub').textContent=c.successSub;
+        const goBtn=document.getElementById('successBtn');
+        goBtn.textContent=c.successBtn; goBtn.href=c.successHref;
+      } else {
+        showToast('❌ ' + data.message, 'error');
+      }
+    } catch(e) {
+      btn.classList.remove('loading');
+      showToast('Network error. Please try again.', 'error');
+    }
+  }
+
+  function v(id){ return document.getElementById(id)?.value?.trim()||''; }
+  function setE(fId,eId,show){
+    const f=document.getElementById(fId),e=document.getElementById(eId);
+    if(!f||!e) return;
+    show?(f.classList.add('error-field'),e.style.display='block'):(f.classList.remove('error-field'),e.style.display='none');
+  }
+  function togglePass(id,el){
+    const i=document.getElementById(id);
+    i.type=i.type==='password'?'text':'password';
+    el.textContent=i.type==='password'?'👁️':'🙈';
+  }
+  function checkStrength(){
+    const pw=document.getElementById('pw1').value;
+    const bars=['b1','b2','b3','b4'].map(id=>document.getElementById(id));
+    const lbl=document.getElementById('pwLabel');
+    bars.forEach(b=>b.className='pw-bar');
+    if(!pw){lbl.textContent='Enter a password';lbl.style.color='';return;}
+    let score=0;
+    if(pw.length>=8)score++;if(/[A-Z]/.test(pw))score++;if(/[0-9]/.test(pw))score++;if(/[^A-Za-z0-9]/.test(pw))score++;
+    const cls=score<=1?'weak':score<=2?'fair':'strong';
+    for(let i=0;i<score;i++) bars[i].classList.add(cls);
+    const lbls=['','Weak','Weak','Fair','Strong 💪'];
+    lbl.textContent=lbls[score];
+    lbl.style.color=cls==='weak'?'var(--error)':cls==='fair'?'var(--gold)':'var(--success)';
+  }
+
+  function getLocation(){ geoDetect('geoBtn','geoStatus','addressLat','addressLng'); }
+  function getLocationOwner(){ geoDetect('geoBtnOwner','geoStatusOwner','bizAddrLat','bizAddrLng'); }
+
+  function geoDetect(btnId,statusId,latId,lngId){
+    const btn=document.getElementById(btnId),st=document.getElementById(statusId);
+    const latInp=document.getElementById(latId),lngInp=document.getElementById(lngId);
+    st.style.color='var(--text-muted)'; st.textContent='🔄 Detecting location...';
+    btn.disabled=true; btn.style.opacity='0.6';
+    if(!navigator.geolocation){st.style.color='var(--error)';st.textContent='❌ Not supported.';btn.disabled=false;btn.style.opacity='1';return;}
+    navigator.geolocation.getCurrentPosition(pos=>{
+      latInp.value=pos.coords.latitude.toFixed(6);
+      lngInp.value=pos.coords.longitude.toFixed(6);
+      st.style.color='var(--success)'; st.textContent='✅ Coordinates captured!';
+      btn.disabled=false;btn.style.opacity='1';
+    },err=>{
+      btn.disabled=false;btn.style.opacity='1';
+      st.style.color='var(--error)';
+      st.textContent=err.code===1?'❌ Permission denied.':'❌ Unable to get location.';
+    },{enableHighAccuracy:true,timeout:10000});
+  }
+
+  function showToast(msg,type=''){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.className='toast '+type;
+    setTimeout(()=>t.classList.add('show'),10);
+    setTimeout(()=>t.classList.remove('show'),3500);
+  }
+</script>
+</body>
+</html>
