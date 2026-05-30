@@ -88,6 +88,7 @@ def owner_required(f):
 def index():
     delivery_location = "Inaruwa, Sunsari"
     location = "Inaruwa-3, Sunsari"
+    whatsapp="+9779805357571"
     phone = "9805357571"
     user = None
     if 'user_id' in session:
@@ -105,6 +106,7 @@ def index():
                            delivery_location=delivery_location,
                            location=location,
                            phone=phone,
+                           whatsapp=whatsapp,
                            user=user,
                            feedbacks=feedbacks)
 

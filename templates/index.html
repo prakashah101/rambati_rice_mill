@@ -1051,7 +1051,7 @@
         </div>
 
         <div class="contact-btns">
-          <a href="https://wa.me/{{phone}}" class="cta-wa" target="_blank">
+          <a href="https://wa.me/{{ whatsapp }}" class="cta-wa" target="_blank">
             💬 Chat on WhatsApp
           </a>
           <a href="tel:{{phone}}" class="cta-call">
@@ -1246,8 +1246,8 @@
 </footer>
 
 <!-- STICKY BUTTONS -->
-<a href="https://wa.me/9805357571" class="sticky-wa" target="_blank" title="Order on WhatsApp">💬</a>
-<a href="tel:9805357571" class="sticky-call" title="Call Now">📞</a>
+<a href="https://wa.me/{{ whatsapp }}" class="sticky-wa" target="_blank" title="Order on WhatsApp">💬</a>
+<a href="tel:{{phone}}" class="sticky-call" title="Call Now">📞</a>
 
 <script>
   // ── Session state from server ──
@@ -1513,7 +1513,7 @@
     const address = (lat && lng) ? `${lat}, ${lng}` : '—';
     const msg = document.querySelector('textarea').value;
     const text = `Hello Rambati Rice Mill!\n\nName: ${name || '—'}\nPhone: ${phone || '—'}\nLocation (Coordinates): ${address}\nOrder/Message: ${msg || '—'}`;
-    window.open(`https://wa.me/{{phone}}?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(`https://wa.me/{{ whatsapp }}?text=${encodeURIComponent(text)}`, '_blank');
   }
 
   // ── Toast ──
